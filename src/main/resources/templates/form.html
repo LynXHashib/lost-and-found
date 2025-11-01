@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title>Item</title>
+  <style>
+    body{font-family:system-ui,Arial,sans-serif;max-width:700px;margin:40px auto;padding:0 16px}
+    label{display:block;margin-top:10px;font-weight:600}
+    input,select,textarea{width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:6px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .actions{margin-top:16px;display:flex;gap:8px}
+    a.button,button{padding:6px 10px;border:1px solid #ddd;background:#fff;border-radius:6px;cursor:pointer}
+  </style>
+</head>
+<body>
+  <h1 th:text="${item.id} == null ? 'New Item' : 'Edit Item'"></h1>
+  <form th:action="${item.id} == null ? @{/items} : @{'/items/' + ${item.id}}" method="post">
+    <label>Title
+      <input type="text" name="title" th:value="${item.title}" required />
+    </label>
+    <label>Description
+      <textarea name="description" rows="4" th:text="${item.description}"></textarea>
+    </label>
+    <div class="row">
+      <div>
+        <label>Status
+          <select name="status" th:value="${item.status}">
+            <option value="LOST" th:selected="${item.status} == 'LOST'">LOST</option>
+            <option value="FOUND" th:selected="${item.status} == 'FOUND'">FOUND</option>
+          </select>
+        </label>
+      </div>
+      <div>
+        <label>Location
+          <input type="text" name="location" th:value="${item.location}" />
+        </label>
+      </div>
+    </div>
+    <label>Contact
+      <input type="text" name="contact" th:value="${item.contact}" />
+    </label>
+    <div class="actions">
+      <button type="submit">Save</button>
+      <a class="button" th:href="@{/items}">Cancel</a>
+    </div>
+  </form>
+</body>
+</html>
