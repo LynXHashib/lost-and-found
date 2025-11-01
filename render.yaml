@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: lost-and-found
+    plan: free
+    runtime: docker
+    autoDeploy: true
