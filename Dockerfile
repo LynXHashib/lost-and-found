@@ -4,18 +4,18 @@ WORKDIR /app
 
 # Copy pom.xml and download dependencies
 COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN mvn dependency:go-offline -B
 
 # Copy source code and build
 COPY src ./src
-RUN mvn clean package -DskipTests
+RUN mvn clean package -DskipTests -B
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
-# Copy jar from build stage
-COPY --from=builder /app/target/*.jar app.jar
+# Copy the Spring Boot executable jar
+COPY --from=builder /app/target/lost-and-found.jar app.jar
 
 # Expose port
 EXPOSE 8080
