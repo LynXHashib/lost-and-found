@@ -3,10 +3,3 @@ services:
     name: lost-and-found
     env: docker
     plan: free
-    envVars:
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:postgresql://ep-old-frog-a1z9bu6q-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channelBinding=require
-      - key: SPRING_DATASOURCE_USERNAME
-        value: neondb_owner
-      - key: SPRING_DATASOURCE_PASSWORD
-        sync: false # Set this manually in Render dashboard for security
