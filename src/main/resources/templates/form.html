@@ -1,48 +1,122 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8" />
-  <title>Item</title>
-  <style>
-    body{font-family:system-ui,Arial,sans-serif;max-width:700px;margin:40px auto;padding:0 16px}
-    label{display:block;margin-top:10px;font-weight:600}
-    input,select,textarea{width:100%;padding:8px;margin-top:6px;border:1px solid #ddd;border-radius:6px}
-    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    .actions{margin-top:16px;display:flex;gap:8px}
-    a.button,button{padding:6px 10px;border:1px solid #ddd;background:#fff;border-radius:6px;cursor:pointer}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${item.id != null ? 'Edit Item' : 'New Item'}">Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button, .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        button:hover, .btn:hover {
+            opacity: 0.9;
+        }
+    </style>
 </head>
 <body>
-  <h1 th:text="${item.id} == null ? 'New Item' : 'Edit Item'"></h1>
-  <form th:action="${item.id} == null ? @{/items} : @{'/items/' + ${item.id}}" method="post">
-    <label>Title
-      <input type="text" name="title" th:value="${item.title}" required />
-    </label>
-    <label>Description
-      <textarea name="description" rows="4" th:text="${item.description}"></textarea>
-    </label>
-    <div class="row">
-      <div>
-        <label>Status
-          <select name="status" th:value="${item.status}">
-            <option value="LOST" th:selected="${item.status} == 'LOST'">LOST</option>
-            <option value="FOUND" th:selected="${item.status} == 'FOUND'">FOUND</option>
-          </select>
-        </label>
-      </div>
-      <div>
-        <label>Location
-          <input type="text" name="location" th:value="${item.location}" />
-        </label>
-      </div>
+    <div class="container">
+        <h1 th:text="${item.id != null ? 'Edit Item' : 'Report New Item'}">Form</h1>
+        
+        <form th:action="${item.id != null ? '/items/' + item.id : '/items'}" 
+              th:object="${item}" 
+              method="post">
+            
+            <div class="form-group">
+                <label for="title">Title *</label>
+                <input type="text" id="title" th:field="*{title}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea id="description" th:field="*{description}"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="location">Location</label>
+                <input type="text" id="location" th:field="*{location}">
+            </div>
+            
+            <div class="form-group">
+                <label for="contact">Contact Information *</label>
+                <input type="text" id="contact" th:field="*{contact}" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="status">Status *</label>
+                <select id="status" th:field="*{status}" required>
+                    <option value="LOST">Lost</option>
+                    <option value="FOUND">Found</option>
+                </select>
+            </div>
+            
+            <div class="buttons">
+                <button type="submit" class="btn-primary">
+                    <span th:text="${item.id != null ? 'Update' : 'Submit'}">Submit</span>
+                </button>
+                <a href="/items" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
     </div>
-    <label>Contact
-      <input type="text" name="contact" th:value="${item.contact}" />
-    </label>
-    <div class="actions">
-      <button type="submit">Save</button>
-      <a class="button" th:href="@{/items}">Cancel</a>
-    </div>
-  </form>
 </body>
 </html>

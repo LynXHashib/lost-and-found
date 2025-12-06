@@ -1,14 +1,24 @@
-# ---- Build stage ----
-FROM maven:3.9-eclipse-temurin-17 AS build
+# Build stage
+FROM maven:3.9-eclipse-temurin-17 AS builder
 WORKDIR /app
-COPY . .
-RUN mvn -q -DskipTests package
 
-# ---- Run stage ----
-FROM eclipse-temurin:17-jre
+# Copy pom.xml and download dependencies
+COPY pom.xml .
+RUN mvn dependency:go-offline
+
+# Copy source code and build
+COPY src ./src
+RUN mvn clean package -DskipTests
+
+# Runtime stage
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/lost-and-found-0.0.1-SNAPSHOT.jar app.jar
-# Render provides PORT; Spring Boot should respect it:
-ENV PORT=8080
+
+# Copy jar from build stage
+COPY --from=builder /app/target/*.jar app.jar
+
+# Expose port
 EXPOSE 8080
-ENTRYPOINT ["java","-Dserver.port=${PORT}","-jar","/app/app.jar"]
+
+# Run the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
